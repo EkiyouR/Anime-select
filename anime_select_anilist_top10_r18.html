@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f6f2">
+<title>ANIME SELECT</title>
+<style>
+:root{--bg:#f7f6f2;--paper:#fff;--ink:#20201e;--muted:#77766f;--line:#e7e5de;--accent:#d85b42;--soft:#f2eee7;--green:#416b55;--shadow:0 12px 36px #28251b0c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif}
+button,select{font:inherit}button{cursor:pointer;border:0}.wrap{max-width:1120px;margin:auto;padding:28px 24px 64px}
+header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:8px 0 20px;margin-bottom:34px}
+.brand{font-size:19px;font-weight:800;letter-spacing:.14em}.brand span{color:var(--accent)}.topnote{font-size:12px;color:var(--muted)}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.12;letter-spacing:-.045em;margin:0 0 12px}h2{font-size:24px;letter-spacing:-.03em;margin:0 0 8px}h3{font-size:16px;margin:0 0 5px}
+p{margin:0 0 14px}.muted{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:12px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow)}
+.hero{max-width:720px;padding:44px 0 26px}.hero p{font-size:16px;color:var(--muted);max-width:600px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:7px;min-width:190px}.field label{font-size:12px;color:var(--muted);font-weight:700}
+select{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-width:190px}
+.btn{padding:11px 17px;border-radius:999px;background:var(--ink);color:white;font-weight:650;transition:.15s}.btn:hover{transform:translateY(-1px);opacity:.9}.btn.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 25px}.step{font-size:12px;color:var(--muted);padding:7px 11px;border:1px solid var(--line);border-radius:99px}.step.active{color:var(--accent);border-color:#e6a99e;background:#fff8f6}
+.status{font-size:13px;color:var(--muted);margin:14px 0}.progress{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin:14px 0 24px}.progress>i{display:block;height:100%;background:var(--accent);width:0;transition:.2s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:15px}.anime{border:1px solid var(--line);border-radius:13px;background:#fff;overflow:hidden;position:relative;transition:.15s}.anime.selected{border:2px solid var(--accent);box-shadow:0 0 0 3px #d85b4217}.cover{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:var(--soft)}.animebody{padding:10px}.anime-title{font-weight:700;font-size:13px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:35px}.native{font-size:11px;color:var(--muted);margin-top:5px;min-height:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.meta{font-size:11px;color:var(--muted);margin-top:7px;display:flex;justify-content:space-between}.pick{position:absolute;top:9px;right:9px;background:#fff;border-radius:99px;padding:5px 8px;font-size:11px;font-weight:700;box-shadow:0 2px 10px #0002}
+.quarter-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:17px}.counter{font-weight:700;color:var(--accent)}.empty{padding:40px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--muted)}
+.match{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch;max-width:780px;margin:24px auto}.versus{align-self:center;color:var(--muted);font-size:12px;font-weight:800}.choice{padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:left;display:flex;flex-direction:column;gap:9px}.choice:hover{border-color:var(--accent)}.choice img{width:100%;max-height:310px;aspect-ratio:3/4;object-fit:cover;border-radius:9px;background:var(--soft)}.choice strong{font-size:15px;line-height:1.35}.choice small{color:var(--muted)}.round-title{text-align:center;margin:25px 0 4px}.center{text-align:center}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin:20px 0}.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:13px;margin-top:22px}.result-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.result-card img{width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--soft)}.result-card div{padding:9px;font-size:12px;font-weight:700}.rank{font-size:10px;color:var(--accent);letter-spacing:.08em;margin-bottom:4px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:5}.toast.show{opacity:1}
+.note{font-size:12px;color:var(--muted);line-height:1.6}.hidden{display:none!important}
+#poster{background:#fff;color:#222;padding:34px;width:100%;max-width:900px;margin:20px auto;border:1px solid var(--line);border-radius:12px}
+.poster-head{display:flex;justify-content:space-between;align-items:end;border-bottom:2px solid #222;padding-bottom:16px;margin-bottom:20px}.poster-head h2{font-size:28px;letter-spacing:.08em}.poster-head span{font-size:11px;color:#777}
+.poster-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.poster-item img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#eee}.poster-item .pname{font-size:11px;font-weight:700;line-height:1.35;margin-top:6px}.poster-item .pjp{font-size:9px;color:#777;line-height:1.3;margin-top:3px}
+footer{border-top:1px solid var(--line);padding-top:18px;margin-top:55px;color:var(--muted);font-size:11px}
+@media(max-width:650px){.wrap{padding:18px 15px 45px}.panel{padding:18px}.hero{padding-top:28px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.match{gap:7px}.choice{padding:8px}.choice img{max-height:220px}.poster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#poster{padding:18px}.poster-head h2{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand">ANIME <span>SELECT</span></div><div class="topnote">A PERSONAL ANIME SELECTION</div></header>
+<main>
+<section id="home">
+<div class="hero"><div class="eyebrow">Your seasons, your favorites</div><h1>从看过的季度里，<br>选出最喜欢的动画。</h1><p>从一个季度开始，逐季挑选作品。每季度选出 5 部，最后通过随机淘汰赛，留下你的 TOP 10。</p></div>
+<div class="panel">
+<div class="row">
+<div class="field"><label for="startQuarter">起始季度</label><select id="startQuarter"></select></div>
+<div class="field"><label for="endQuarter">结束季度</label><select id="endQuarter"></select></div>
+<div class="field" style="min-width:180px"><label>内容过滤</label><label style="display:flex;align-items:center;gap:9px;font-size:14px;color:var(--ink);font-weight:500"><input id="hideR18" type="checkbox" checked style="accent-color:var(--accent);width:17px;height:17px">过滤 R18 内容</label></div>
+<button class="btn" id="startBtn">开始选择</button>
+</div>
+<p class="note" style="margin-top:16px">季度范围由起始与结束季度决定；每季度最多选择 5 部，选不满 5 部也可以继续。当前资料库采用 AniList 的季度分类。</p>
+<p class="note">默认过滤 R18 内容；取消勾选后会显示 AniList 标记为成人向的作品。</p>
+<div class="note" style="margin-top:8px">数据源：AniList · 无需账号或 Token。动画中文名优先（有中文别名时），同时显示日文原名。</div>
+</div>
+</section>
+
+<section id="seasonScreen" class="hidden">
+<div class="steps"><span class="step active">01 · 季度选择</span><span class="step">02 · 随机淘汰赛</span><span class="step">03 · TOP 10</span></div>
+<div class="quarter-head"><div><div class="eyebrow">Season selection</div><h2 id="quarterTitle">季度</h2><p class="muted" id="quarterSub">每季度最多选择 5 部作品</p></div><div class="counter" id="pickCounter">已选 0 / 5</div></div>
+<div class="progress"><i id="seasonProgress"></i></div>
+<div class="toolbar"><div class="status" id="loadStatus">正在加载 AniList 数据…</div><div class="row"><button class="btn secondary" id="prevQuarter">上一个季度</button><button class="btn secondary" id="nextQuarter">下一个季度</button></div></div>
+<div id="animeGrid" class="grid"></div>
+<div class="toolbar"><button class="btn ghost" id="backHome">返回设置</button><button class="btn" id="continueBtn" disabled>完成本季度</button></div>
+</section>
+
+<section id="tournamentScreen" class="hidden">
+<div class="steps"><span class="step">01 · 季度选择</span><span class="step active">02 · 随机淘汰赛</span><span class="step">03 · TOP 10</span></div>
+<div class="center"><div class="eyebrow">The knockout stage</div><h2 id="tourneyTitle">随机淘汰赛</h2><p class="muted" id="tourneySub">每场选择一部晋级，直到剩下 10 部。</p></div>
+<div class="progress"><i id="tourneyProgress"></i></div>
+<div class="round-title"><h3 id="roundLabel">Round 1</h3><div class="status" id="matchLabel"></div></div>
+<div id="matchArea"></div>
+<div class="toolbar"><button class="btn ghost" id="backSeasons">返回季度选择</button><div class="row"><button class="btn secondary" id="reshuffleBtn">重新分组未完成对决</button><button class="btn secondary" id="skipBtn">跳过本场</button></div></div>
+</section>
+
+<section id="resultScreen" class="hidden">
+<div class="steps"><span class="step">01 · 季度选择</span><span class="step">02 · 随机淘汰赛</span><span class="step active">03 · TOP 10</span></div>
+<div class="center"><div class="eyebrow">Your final selection</div><h1>最终入选的 10 部作品</h1><p class="muted">这是经过随机配对与逐场选择后留下的作品。</p></div>
+<div id="resultGrid" class="result-grid"></div>
+<div class="toolbar"><button class="btn ghost" id="editTournament">返回比赛记录</button><button class="btn" id="savePng">保存结果截图 PNG</button></div>
+<div id="poster">
+<div class="poster-head"><div><div class="eyebrow">ANIME SELECT · FINAL 10</div><h2>MY ANIME SELECTION</h2></div><span id="posterDate"></span></div>
+<div class="poster-grid" id="posterGrid"></div>
+</div>
+<p class="note center">截图将保存上方的海报区域。若浏览器阻止下载，可长按图片或使用浏览器的分享/保存功能。</p>
+</section>
+</main>
+<footer>ANIME SELECT · Anime data provided by AniList · Your selections are stored locally in this browser.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+'use strict';
+const API='https://graphql.anilist.co';
+const SEASONS=['WINTER','SPRING','SUMMER','FALL'];
+const CNSEASON={WINTER:'冬季',SPRING:'春季',SUMMER:'夏季',FALL:'秋季'};
+const $=id=>document.getElementById(id);
+const now=new Date(), currentYear=now.getFullYear(), currentSeason=SEASONS[Math.floor(now.getMonth()/3)];
+const qkey=(y,s)=>y+'-'+s;
+const parseQ=k=>{const [y,s]=k.split('-');return {year:+y,season:s}};
+const quarterIndex=k=>{const q=parseQ(k);return q.year*4+SEASONS.indexOf(q.season)};
+const quarterLabel=k=>{const q=parseQ(k);return `${q.year}年 ${CNSEASON[q.season]}`};
+const allQuarters=[];
+for(let y=1940;y<=currentYear;y++) for(const s of SEASONS) {
+ const k=qkey(y,s); if(quarterIndex(k)<=quarterIndex(qkey(currentYear,currentSeason))) allQuarters.push(k);
+}
+const state={range:[],seasonIndex:0,selected:{},cache:{},animeById:{},entrants:[],round:0,rounds:[],currentRound:null,finalists:[],history:[],champion:null};
+const STORAGE='anime-select-anilist-v4';
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch(e){}}
+function restore(){try{const v=JSON.parse(localStorage.getItem(STORAGE));if(v&&v.cache&&v.selected){Object.assign(state,v);return true;}}catch(e){}return false;}
+function toast(s){const t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function show(id){['home','seasonScreen','tournamentScreen','resultScreen'].forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo(0,0);}
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function titleFor(m){
+ const native=m.title?.native||'';
+ const candidates=(m.synonyms||[]).filter(x=>x&&x!==native&&/[\u3400-\u9fff]/.test(x)&&!/[\u3040-\u30ff]/.test(x));
+ const preferred=m.title?.userPreferred||'';
+ const chinese=candidates[0] || (preferred!==native&&/[\u3400-\u9fff]/.test(preferred)?preferred:'');
+ return chinese||m.title?.english||preferred||m.title?.romaji||native||'未命名动画';
+}
+function normalize(m){return {id:m.id,isAdult:!!m.isAdult,title:titleFor(m),native:m.title?.native||'',romaji:m.title?.romaji||'',english:m.title?.english||'',cover:m.coverImage?.extraLarge||m.coverImage?.large||'',score:m.averageScore||null,format:m.format||'',episodes:m.episodes||null,url:m.siteUrl||'',year:m.startDate?.year||null};}
+const QUERY=`query ($season:MediaSeason!,$year:Int!,$page:Int!){Page(page:$page,perPage:50){pageInfo{hasNextPage} media(type:ANIME,season:$season,seasonYear:$year,sort:POPULARITY_DESC){id isAdult title{romaji english native userPreferred} synonyms coverImage{large extraLarge} averageScore format episodes siteUrl startDate{year}}}}`;
+async function fetchSeason(key){
+ if(state.cache[key]) return state.cache[key];
+ const {year,season}=parseQ(key);let page=1,items=[];
+ while(true){
+  let response;
+  try{response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({query:QUERY,variables:{season,year,page}})});}
+  catch(e){throw new Error('无法连接 AniList。请检查网络，或确认浏览器允许访问外部 API。');}
+  if(response.status===429) throw new Error('AniList 请求过于频繁，请稍等片刻后重试。');
+  if(!response.ok) throw new Error(`AniList 请求失败（HTTP ${response.status}）。`);
+  const data=await response.json();
+  if(data.errors?.length) throw new Error(data.errors[0].message||'AniList 返回数据错误。');
+  const block=data.data?.Page;if(!block) throw new Error('AniList 返回格式异常。');
+  items.push(...(block.media||[]).map(normalize));
+  if(!block.pageInfo?.hasNextPage)break;
+  page++; if(page>10)break;
+ }
+ state.cache[key]=items;
+ for(const a of items)state.animeById[a.id]=a;
+ save();return items;
+}
+function selectedIds(k){return state.selected[k]||[];}
+function renderSeason(){
+ const key=state.range[state.seasonIndex];if(!key)return;
+ $('quarterTitle').textContent=quarterLabel(key);
+ $('quarterSub').textContent=`第 ${state.seasonIndex+1} / ${state.range.length} 个季度 · 每季度选择 5 部`;
+ $('pickCounter').textContent=`已选 ${selectedIds(key).length} / 5`;
+ $('seasonProgress').style.width=`${(selectedIds(key).length/5)*100}%`;
+ $('prevQuarter').disabled=state.seasonIndex===0;
+ $('nextQuarter').disabled=state.seasonIndex===state.range.length-1;
+ $('continueBtn').textContent=state.seasonIndex===state.range.length-1?'进入随机淘汰赛':'完成本季度';
+ const grid=$('animeGrid');grid.innerHTML='';
+ const allItems=state.cache[key];
+ if(!allItems){grid.innerHTML='<div class="empty">正在加载动画列表…</div>';return;}
+ const hideR18=$('hideR18').checked;
+ const items=allItems.filter(a=>!hideR18||!a.isAdult);
+ if(!items.length){grid.innerHTML='<div class="empty">当前过滤条件下没有找到动画。可以关闭 R18 过滤，或尝试其他季度。</div>';$('loadStatus').textContent='没有符合条件的作品';return;}
+ $('loadStatus').textContent=`显示 ${items.length} 部动画（共获取 ${allItems.length} 部）· 每季度最多选 5 部`;
+ const chosen=selectedIds(key);
+ items.forEach(a=>{
+  const card=document.createElement('article');card.className='anime'+(chosen.includes(a.id)?' selected':'');
+  const img=document.createElement('img');img.className='cover';img.loading='lazy';img.src=a.cover||'';img.alt='';
+  const body=document.createElement('div');body.className='animebody';
+  const name=document.createElement('div');name.className='anime-title';name.textContent=a.title;
+  const native=document.createElement('div');native.className='native';native.textContent=a.native||'日文原名暂无';
+  const meta=document.createElement('div');meta.className='meta';meta.innerHTML=`<span>${a.format||'ANIME'}</span><span>${a.score?('★ '+(a.score/10).toFixed(1)):'—'}</span>`;
+  body.append(name,native,meta);card.append(img,body);
+  if(chosen.includes(a.id)){const badge=document.createElement('span');badge.className='pick';badge.textContent='✓ 已选择';card.append(badge);}
+  card.addEventListener('click',()=>{
+   const list=selectedIds(key).slice(),i=list.indexOf(a.id);
+   if(i>=0)list.splice(i,1);else if(list.length<5)list.push(a.id);else{toast('每季度最多选择 5 部');return;}
+   state.selected[key]=list;save();renderSeason();
+  });
+  grid.append(card);
+ });
+ $('pickCounter').textContent=`已选 ${chosen.length} / 5`;
+ $('seasonProgress').style.width=`${chosen.length*20}%`;
+ $('continueBtn').disabled=false;
+}
+async function loadCurrentSeason(){
+ const key=state.range[state.seasonIndex];$('loadStatus').textContent='正在加载 AniList 数据…';
+ $('animeGrid').innerHTML='<div class="empty">正在从 AniList 获取动画资料…</div>';renderSeason();
+ try{await fetchSeason(key);renderSeason();}
+ catch(e){$('loadStatus').textContent=e.message;$('animeGrid').innerHTML=`<div class="empty">${escapeHtml(e.message)}<br><br><button class="btn secondary" id="retryLoad">重试</button></div>`;$('retryLoad').onclick=loadCurrentSeason;}
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function beginRange(){
+ const start=$('startQuarter').value,end=$('endQuarter').value;
+ if(quarterIndex(start)>quarterIndex(end)){toast('结束季度不能早于起始季度');return;}
+ state.range=allQuarters.filter(k=>quarterIndex(k)>=quarterIndex(start)&&quarterIndex(k)<=quarterIndex(end));
+ state.seasonIndex=0;save();show('seasonScreen');loadCurrentSeason();
+}
+function collectEntrants(){
+ const ids=[];for(const k of state.range){for(const id of (state.selected[k]||[]))if(!ids.includes(id))ids.push(id);}
+ return ids.map(id=>state.animeById[id]).filter(Boolean);
+}
+function makeRound(pool,roundNo){
+ const shuffled=shuffle(pool),needed=pool.length-10;
+ const matchCount=Math.min(Math.floor(pool.length/2),needed);
+ const matches=[];
+ for(let i=0;i<matchCount;i++)matches.push([shuffled[i*2],shuffled[i*2+1]]);
+ const byes=shuffled.slice(matchCount*2);
+ return {roundNo,matches,byes,winners:[],decisions:[],cursor:0};
+}
+function startTournament(){
+ state.entrants=collectEntrants();
+ if(state.entrants.length<10){toast(`目前只有 ${state.entrants.length} 部作品，至少需要 10 部才能选出 TOP 10`);return;}
+ state.round=1;state.history=[];state.finalists=[];state.champion=null;
+ state.currentRound=makeRound(state.entrants,1);save();show('tournamentScreen');renderMatch();
+}
+function currentMatch(){const r=state.currentRound;return r?.matches[r.cursor]||null;}
+function renderMatch(){
+ const r=state.currentRound;if(!r)return;
+ const total=r.matches.length,done=r.cursor;
+ $('roundLabel').textContent=`第 ${r.roundNo} 轮`;
+ $('matchLabel').textContent=total?`本轮对决 ${Math.min(done+1,total)} / ${total} · 已完成 ${done} 场`:'本轮无需对决';
+ $('tourneyProgress').style.width=`${Math.min(100,(state.history.length/Math.max(1,state.entrants.length-10))*100)}%`;
+ $('reshuffleBtn').disabled=done>=total;
+ $('skipBtn').disabled=done>=total;
+ const area=$('matchArea');area.innerHTML='';
+ if(done>=total){finishRound();return;}
+ const pair=currentMatch();if(!pair){finishRound();return;}
+ const wrap=document.createElement('div');wrap.className='match';
+ pair.forEach((a,i)=>{
+  const btn=document.createElement('button');btn.className='choice';
+  const img=document.createElement('img');img.src=a.cover||'';img.alt='';
+  const title=document.createElement('strong');title.textContent=a.title;
+  const jp=document.createElement('small');jp.textContent=a.native||'日文原名暂无';
+  const score=document.createElement('small');score.textContent=a.score?`AniList ${ (a.score/10).toFixed(1) } / 10`:'';
+  btn.append(img,title,jp,score);btn.onclick=()=>chooseWinner(i);wrap.append(btn);
+  if(i===0){const v=document.createElement('div');v.className='versus';v.textContent='VS';wrap.append(v);}
+ });
+ area.append(wrap);
+}
+function chooseWinner(index){
+ const r=state.currentRound,pair=currentMatch();if(!pair)return;
+ const winner=pair[index],loser=pair[1-index];
+ r.winners.push(winner);r.decisions.push({winner,loser});state.history.push({round:r.roundNo,winner,loser});
+ r.cursor++;save();renderMatch();
+}
+function skipMatch(){
+ const r=state.currentRound;if(r.cursor>=r.matches.length)return;
+ const pair=r.matches.splice(r.cursor,1)[0];r.matches.push(pair);save();renderMatch();toast('已跳过，稍后再回来决定');
+}
+function reshufflePending(){
+ const r=state.currentRound;if(r.cursor>=r.matches.length)return;
+ const unresolved=r.matches.slice(r.cursor).flat();
+ const bye=r.byes||[];
+ const required=r.matches.length-r.cursor;
+ const shuffled=shuffle(unresolved.concat(bye));
+ const newMatches=[];
+ for(let i=0;i<required;i++)newMatches.push([shuffled[i*2],shuffled[i*2+1]]);
+ r.matches=r.matches.slice(0,r.cursor).concat(newMatches);
+ r.byes=shuffled.slice(required*2);
+ save();renderMatch();toast('未完成的作品已重新随机分组');
+}
+function finishRound(){
+ const r=state.currentRound;
+ const survivors=r.winners.concat(r.byes||[]);
+ if(survivors.length===10){state.finalists=shuffle(survivors);save();showResults();return;}
+ if(survivors.length<10){$('matchArea').innerHTML='<div class="empty">本轮结果异常：剩余作品少于 10 部。请返回季度选择检查数据。</div>';return;}
+ state.round++;state.currentRound=makeRound(survivors,state.round);save();renderMatch();
+}
+function showResults(){
+ show('resultScreen');
+ const sorted=state.finalists.slice();
+ const grid=$('resultGrid');grid.innerHTML='';
+ const poster=$('posterGrid');poster.innerHTML='';
+ sorted.forEach((a,i)=>{
+  const card=document.createElement('article');card.className='result-card';
+  const img=document.createElement('img');img.src=a.cover||'';img.alt='';
+  const div=document.createElement('div');div.innerHTML=`<div class="rank">SELECTED ${String(i+1).padStart(2,'0')}</div>${escapeHtml(a.title)}<div style="font-weight:400;color:#777;font-size:10px;margin-top:4px">${escapeHtml(a.native||'')}</div>`;
+  card.append(img,div);grid.append(card);
+  const item=document.createElement('div');item.className='poster-item';
+  const pi=document.createElement('img');pi.src=a.cover||'';pi.crossOrigin='anonymous';pi.alt='';
+  const pn=document.createElement('div');pn.className='pname';pn.textContent=a.title;
+  const pj=document.createElement('div');pj.className='pjp';pj.textContent=a.native||'';
+  item.append(pi,pn,pj);poster.append(item);
+ });
+ $('posterDate').textContent=new Date().toLocaleDateString('zh-CN');
+}
+function backToTournament(){show('tournamentScreen');renderMatch();}
+function loadSaved(){
+ if(!restore())return false;
+ if(!state.range?.length)return false;
+ $('startQuarter').value=state.range[0];$('endQuarter').value=state.range[state.range.length-1];
+ return true;
+}
+function initSelects(){
+ const start=$('startQuarter'),end=$('endQuarter');
+ allQuarters.forEach(k=>{const o1=document.createElement('option');o1.value=k;o1.textContent=quarterLabel(k);start.append(o1);const o2=o1.cloneNode(true);end.append(o2);});
+ const defaultStart=qkey(Math.max(1940,currentYear-2),currentSeason);
+ start.value=defaultStart;end.value=qkey(currentYear,currentSeason);
+}
+function savePng(){
+ const poster=$('poster');
+ if(typeof window.html2canvas!=='function'){toast('截图组件尚未加载，请检查网络后重试');return;}
+ window.html2canvas(poster,{backgroundColor:'#ffffff',scale:2,useCORS:true,allowTaint:false}).then(canvas=>{
+  canvas.toBlob(blob=>{if(!blob){toast('生成图片失败，请重试');return;}
+   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ANIME-SELECT-TOP10.png';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);toast('截图已保存');
+  });
+ }).catch(()=>toast('截图生成失败。可能是封面跨域限制，请稍后重试。'));
+}
+$('startBtn').onclick=beginRange;
+$('hideR18').addEventListener('change',()=>{
+ const hide=$('hideR18').checked;
+ if(hide){
+  for(const key of Object.keys(state.selected)){
+   const allowed=new Set((state.cache[key]||[]).filter(a=>!a.isAdult).map(a=>a.id));
+   state.selected[key]=(state.selected[key]||[]).filter(id=>allowed.has(id));
+  }
+  save();
+ }
+ try{localStorage.setItem('anime-select-hide-r18',hide?'true':'false');}catch(e){}
+ if(!$('seasonScreen').classList.contains('hidden'))renderSeason();
+});
+$('prevQuarter').onclick=()=>{if(state.seasonIndex>0){state.seasonIndex--;save();loadCurrentSeason();}};
+$('nextQuarter').onclick=()=>{if(state.seasonIndex<state.range.length-1){state.seasonIndex++;save();loadCurrentSeason();}};
+$('continueBtn').onclick=()=>{if(state.seasonIndex<state.range.length-1){state.seasonIndex++;save();loadCurrentSeason();}else startTournament();};
+$('backHome').onclick=()=>show('home');
+$('backSeasons').onclick=()=>{show('seasonScreen');loadCurrentSeason();};
+$('reshuffleBtn').onclick=reshufflePending;$('skipBtn').onclick=skipMatch;
+$('editTournament').onclick=backToTournament;$('savePng').onclick=savePng;
+initSelects();
+try{$('hideR18').checked=localStorage.getItem('anime-select-hide-r18')!=='false';}catch(e){}
+const restored=loadSaved();
+if(restored){
+ if(state.currentRound&&state.finalists?.length===10){showResults();}
+ else if(state.currentRound){show('tournamentScreen');renderMatch();}
+ else if(state.range.length){show('seasonScreen');loadCurrentSeason();}
+}
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
